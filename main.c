@@ -74,7 +74,7 @@ int launch(char **args){
   pid_t pid,wpid;
   int status;
 
-  // Reality splits in this dimension
+  // Reality splits in this dimension, this is awesome
   pid = fork();
 
   // New process
@@ -195,7 +195,7 @@ void loop(void) {
   int status;
 
   do {
-    printf(">_");
+    printf("bsh>_ ");
     line = read_line();
     args = split_line(line);
     status = execute(args);
@@ -203,7 +203,6 @@ void loop(void) {
     printf("%s", line);
     free(line);
     free(args);
-
   } while (status);
 }
 
