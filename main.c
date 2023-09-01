@@ -136,39 +136,21 @@ char **split_line(char *line){
 }
 
 char *read_line(void) {
-  int position = 0;
-  int bufsize = BUFSIZE;
-  char *buffer = malloc(sizeof(char) * bufsize);
-  int c;
+  char *line = NULL;
 
-  if (!buffer) {
-    fprintf(stderr, "beanshell: allocation error\n");
-    exit(EXIT_FAILURE);
+  size_t bufsize = 0;
+
+  size_t count = getline(&line, &bufsize, stdin);
+
+  if(count != -1) return line;
+
+  if(feof(stdin)) {
+    exit(EXIT_SUCCESS);
   }
 
-  while (1) {
-    c = getchar();
-
-    if (c == EOF || c == '\n') {
-      buffer[position] = '\0';
-      return buffer;
-    }
-
-    else {
-      buffer[position] = c;
-    }
-
-    position++;
-
-    if (position >= bufsize) {
-      bufsize += BUFSIZE;
-      buffer = realloc(buffer, bufsize);
-
-      if (!buffer) {
-        fprintf(stderr, "beanshell: allocation error\n");
-        exit(EXIT_FAILURE);
-      }
-    }
+  else {
+    perror("readline");
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -190,8 +172,8 @@ int execute(char **args){
 }
 
 void loop(void) {
-  char *line;
-  char **args;
+  char *line = NULL;
+  char **args = NULL;
   int status;
 
   do {
@@ -200,7 +182,6 @@ void loop(void) {
     args = split_line(line);
     status = execute(args);
 
-    printf("%s", line);
     free(line);
     free(args);
   } while (status);
@@ -208,8 +189,6 @@ void loop(void) {
 
 
 int main(int argc, char *argv[]) {
-
   loop();
-
   return EXIT_SUCCESS;
 }
