@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <limits.h>
 
 /*
   Function Declarations for builtin shell commands:
@@ -175,12 +176,15 @@ void loop(void) {
   char *line = NULL;
   char **args = NULL;
   int status;
+  char cwd[PATH_MAX];
 
   do {
-    printf("bsh>_ ");
+    getcwd(cwd, sizeof(cwd));
+    printf("bsh %s>_ ", cwd);
     line = read_line();
     args = split_line(line);
     status = execute(args);
+    getcwd(cwd, sizeof(cwd));
 
     free(line);
     free(args);
