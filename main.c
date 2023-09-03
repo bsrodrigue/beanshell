@@ -92,7 +92,7 @@ int launch(char **args){
 
   else {
       // We want to keep the parent alive while the child is busy.
-      do {  
+  do {
         wpid = waitpid(pid, &status, WUNTRACED);
       } while(!WIFEXITED(status) && !WIFSIGNALED(status));
   }
@@ -175,15 +175,18 @@ void loop(void) {
   char *line = NULL;
   char **args = NULL;
   int status;
+  char *cwd = malloc(sizeof(char) * 1024);
 
   do {
-    printf("bsh>_ ");
+    getcwd(cwd, sizeof(char) * 1024);
+    printf("%s >_ ", cwd);
     line = read_line();
     args = split_line(line);
     status = execute(args);
 
     free(line);
     free(args);
+    free(cwd);
   } while (status);
 }
 
