@@ -177,10 +177,11 @@ void loop(void) {
   int status;
 
   do {
-    printf("bsh>_ ");
+    printf("%s >_ ", getcwd(NULL, 0));
     line = read_line();
     args = split_line(line);
     status = execute(args);
+    getcwd(NULL, 0);
 
     free(line);
     free(args);
